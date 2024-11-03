@@ -1,13 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './App.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Navbar from './component/navigation/layout';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Link,
+} from "react-router-dom";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navbar />,
+    children: [
+      { index: true, element: <App /> },
+      {
+        path: "products",
+        element: <div>123</div>,
+      },
+    ]
+  },
+
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      <RouterProvider router={router} />
+    {/* <App /> */}
   </React.StrictMode>
 );
 
