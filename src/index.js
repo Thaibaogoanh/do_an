@@ -3,38 +3,36 @@ import ReactDOM from 'react-dom/client';
 import './App.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Navbar from './component/navigation/layout';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Link,
-} from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';    // importing the Bootstrap CSS file into the React application.
+import { HelmetProvider } from 'react-helmet-async';
+import { StoreProvider } from './Store.js';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';   // for integrating PayPal scripts into the application.
 
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Navbar />,
-    children: [
-      { index: true, element: <App /> },
-      {
-        path: "products",
-        element: <div>123</div>,
-      },
-    ]
-  },
-
-]);
-
+// Entry point for rendering the React application.
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Renders the main `App` component wrapped in `StoreProvider`, `HelmetProvider`, and `PayPalScriptProvider`.
+//This setup allows to manage the global state of tha app and share it efficiently across different parts of my React component tree.
+
 root.render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-    {/* <App /> */}
-  </React.StrictMode>
+  //<React.StrictMode>
+
+  // `StoreProvider` wraps the entire application - providing global state management through the React context.
+  // Context providers in React are used to pass down data to all the components in the tree without having to explicitly pass props at each level.
+  // responsible for providing the application with a shared state (state) and a way to update that state (dispatch).
+  <StoreProvider>
+    <HelmetProvider>
+      {/* HelmetProvider and PayPalScriptProvider are also wrapping the application */}
+      {/* deferLoading=true because we dont loading paypal in the begining of the application*/}
+      <PayPalScriptProvider deferLoading={true}>
+        <App />
+      </PayPalScriptProvider>
+    </HelmetProvider>
+  </StoreProvider>
+  //</React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
+// for measuring performance in your app, pass a function, to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
